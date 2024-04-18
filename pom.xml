@@ -14,8 +14,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <sonarqube.username>admin</sonarqube.username>
-    <sonarqube.password>admin</sonarqube.password>
 
     <aspectj.version>1.9.22</aspectj.version>
     <poi.version>5.2.5</poi.version>
@@ -23,30 +21,30 @@
     <aspectj.version>1.9.20.1</aspectj.version>
     <jacoco.version>0.8.11</jacoco.version>
 
-    <sonarqube.host.url>http://localhost:9000</sonarqube.host.url>
-    <sonarqube.projectKey>Moda-Framework</sonarqube.projectKey>
+    <sonarqube.host.url>http://localhost:9090</sonarqube.host.url>
+    <sonarqube.projectKey>moda</sonarqube.projectKey>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>4.18.1</version>
+      <version>4.19.1</version>
     </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>7.9.0</version>
+      <version>7.10.1</version>
     </dependency>
     <dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-testng</artifactId>
-      <version>2.26.0</version>
+      <version>2.27.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.bonigarcia</groupId>
       <artifactId>webdrivermanager</artifactId>
-      <version>5.7.0</version>
+      <version>5.8.0</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -103,6 +101,7 @@
       <artifactId>commons-io</artifactId>
       <version>2.15.1</version>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -111,10 +110,6 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
-          <configuration>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
@@ -212,8 +207,8 @@
       <properties>
         <sonar.host.url>${sonarqube.host.url}</sonar.host.url>
         <sonar.projectKey>${sonarqube.projectKey}</sonar.projectKey>
-        <sonar.login>${sonarqube.username}</sonar.login>
-        <sonar.password>${sonarqube.password}</sonar.password>
+        <!--suppress UnresolvedMavenProperty -->
+        <sonar.token>${env.SONAR_SECRET}</sonar.token>
       </properties>
     </profile>
     <profile>

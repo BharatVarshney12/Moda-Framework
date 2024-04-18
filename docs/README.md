@@ -2,14 +2,15 @@
 
 ## Run the test
 ```shell
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/valid-tests.xml
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/dev-tests.xml
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/valid-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/dev-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml
 ```
 
 ## SonarQube command
 ```shell
 ./sonar.sh start
+mvn compile
 mvn sonar:sonar
 ```
 

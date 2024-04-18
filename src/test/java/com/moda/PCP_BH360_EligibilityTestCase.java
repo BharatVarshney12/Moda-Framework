@@ -31,6 +31,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.restassured.response.Response;
+import org.testng.asserts.SoftAssert;
 
 public class PCP_BH360_EligibilityTestCase extends Base {
     String userName;
@@ -48,9 +49,11 @@ public class PCP_BH360_EligibilityTestCase extends Base {
         userName = userID;
         password = Constants.PASSWORD;
 
-        if ( !getDriver().getCurrentUrl().equals(appURL)){
-            getDriver().get(appURL);
-        }
+                    getDriver().get(appURL);
+//
+//        if ( !getDriver().getCurrentUrl().equals(appURL)){
+//            getDriver().get(appURL);
+//        }
 
         LoginPage loginPage = new LoginPage(getDriver());
 
@@ -62,9 +65,19 @@ public class PCP_BH360_EligibilityTestCase extends Base {
         AllureReport.step("API content type:" + response.getContentType() );
         Assert.assertEquals(response.getContentType(), "text/plain;charset=UTF-8", "Response type is not text/plain;charset=UTF-8");
 
+        Response getAccountResponse = loginPage.getAccountsWithAPI();
+
+        AllureReport.step("Get Accounts with API: firstName => " + getAccountResponse.jsonPath().getString("firstName"));
+        softAssert.assertTrue(getAccountResponse.getBody().print().contains("firstName"));
+
         loginPage.inputUserName(userName);
         loginPage.inputPassword(password);
         loginPage.submitLogin();
+
+        boolean isTermsAndPoliciesDisplayed = loginPage.waitForTermsAndPolicies();
+        if(isTermsAndPoliciesDisplayed){
+            loginPage.processTestForm(Constants.TEST_EMAIL);
+        }
 
         DashboardPage dashboardPage = new DashboardPage(getDriver());
         String welcomeMessage = dashboardPage.welcomeMessage();
@@ -112,6 +125,7 @@ public class PCP_BH360_EligibilityTestCase extends Base {
         }
 
         AllureReport.step("PCP Eligibility API response: " + pcpEligibilityResponse.getBody().asString());
+
 
     }
 
