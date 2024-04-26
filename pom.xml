@@ -20,8 +20,9 @@
     <rest-assured.version>5.4.0</rest-assured.version>
     <aspectj.version>1.9.20.1</aspectj.version>
     <jacoco.version>0.8.11</jacoco.version>
+    <extend.version>5.1.1</extend.version>
 
-    <sonarqube.host.url>http://localhost:9000</sonarqube.host.url>
+    <sonarqube.host.url>http://localhost:9090</sonarqube.host.url>
     <sonarqube.projectKey>moda</sonarqube.projectKey>
   </properties>
 
@@ -101,7 +102,11 @@
       <artifactId>commons-io</artifactId>
       <version>2.15.1</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>${extend.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -122,7 +127,7 @@
           <version>3.2.5</version>
           <configuration>
             <includes>
-              <include>com.moda.ValidLoginTC</include>
+              <include>com.moda.ValidLoginTestCase</include>
             </includes>
             <argLine>
               -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
