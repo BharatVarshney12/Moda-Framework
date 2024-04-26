@@ -33,14 +33,12 @@ public class Base {
                     driverInstance = wdm.get().create();
                     driver.set(driverInstance);
                     driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-//                    ClearCache.clearChromeCache(driverInstance);
                     break;
                 case "edge":
                     setWDM(WebDriverManager.edgedriver().watch());
                     driverInstance = wdm.get().create();
                     driver.set(driverInstance);
                     driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-//                    ClearCache.clearEdgeCache(driverInstance);
                     break;
                 case "firefox":
                     setWDM(WebDriverManager.firefoxdriver());
@@ -53,7 +51,7 @@ public class Base {
             }
 
             driverInstance.manage().window().maximize();
-//            driverInstance.get(Constants.URL);
+            driverInstance.get(Constants.URL);
 
             LogHelper.getLogger().info("Navigated to the URL with browser: {}", browser);
         } catch (Exception e) {
