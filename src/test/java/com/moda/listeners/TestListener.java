@@ -33,10 +33,9 @@ public class TestListener implements ITestListener {
 
     public void onStart(ITestContext context) {
         extent = new ExtentReports();
-        spark = new ExtentSparkReporter("target/extend-report/extend-report.html");
+        spark = new ExtentSparkReporter("target/extent-report/extent-report.html");
         extent.attachReporter(spark);
     }
-
 
     public void onTestStart(ITestResult result){
         String testMethod = result.getMethod().getMethodName();
@@ -47,7 +46,10 @@ public class TestListener implements ITestListener {
         DriverManagerType wdmType = Base.getWDM().getDriverManagerType();
 
         if ( wdmType.toString().equals("EDGE") || wdmType.toString().equals("CHROME") ){
+//            thread = Thread.currentThread();
+//            videoRecordingFileName = testMethod + "-" + thread.getId();
             videoRecordingFileName = testMethod;
+            LogHelper.getLogger().info(videoRecordingFileName);
             deleteIfExists(videoRecordingFileName);
             Base.getWDM().startRecording(getDriver(), videoRecordingFileName);
         }
@@ -76,10 +78,13 @@ public class TestListener implements ITestListener {
         String errorMessage = result.getThrowable() != null ? result.getThrowable().getMessage() : "Unknown error";
         LogHelper.getLogger().error("Test failed: " + result.getMethod().getMethodName() + " - Error: " + errorMessage);
         String testMethod = result.getMethod().getMethodName();
-        test.fail("Failed: " + testMethod);
+
         ScreenShot screenShot = new ScreenShot(getDriver());
         String inputSc =  screenShot.takeScreenshot(result.getMethod().getMethodName());
         AllureReport.attachScreenshot(inputSc,result.getMethod().getMethodName());
+
+        test.addScreenCaptureFromPath(inputSc)
+                .fail( testMethod + " Failed");
 
         DriverManagerType wdmType = Base.getWDM().getDriverManagerType();
 
