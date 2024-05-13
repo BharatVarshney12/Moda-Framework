@@ -16,8 +16,8 @@ import java.util.List;
 
 public class PDFGenerator {
 
-    private PDFGenerator() {
-        throw new IllegalStateException("Utility class");
+    private PDFGenerator(){
+        throw new IllegalStateException("This is utility class");
     }
 
     public static String generatePdfReport(List<ISuite> suites) {

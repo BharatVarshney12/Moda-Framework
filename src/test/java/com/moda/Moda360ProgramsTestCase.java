@@ -1,6 +1,5 @@
 package com.moda;
 
-import com.moda.basetc.Base;
 import com.moda.core.ResourceString;
 import com.moda.pages.DashboardPage;
 import com.moda.pages.Moda360ProgramsPage;
@@ -11,15 +10,15 @@ import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class Moda360ProgramsTC extends Base {
+public class Moda360ProgramsTestCase extends ValidLoginTestCase {
 
-  @Test(dependsOnMethods = "com.moda.ValidLoginTC.ValidLoginTest")
+  @Test(groups = "Moda360ProgramsPage", dependsOnGroups = "validLogin")
   @Epic("Moda Main Web App")
   @Feature("Moda 360 program")
   @Story("Moda 360 Program validation")
   @Severity(SeverityLevel.CRITICAL)
   @Description("Moda 360 program")
-  public void moda_360_programs_page() throws Exception {
+  public void Moda360ProgramsPage() throws Exception {
     DashboardPage dashboardPage = new DashboardPage(getDriver());
 
     dashboardPage.clickOnModa360Menu();

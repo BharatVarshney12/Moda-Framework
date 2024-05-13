@@ -1,11 +1,10 @@
 package com.moda.utils;
 
 import java.util.ArrayList;
-
 import org.openqa.selenium.WebDriver;
 
-public class Tab {
 
+public class Tab {
     private Tab(){
         throw new IllegalStateException("This is utility class");
     }

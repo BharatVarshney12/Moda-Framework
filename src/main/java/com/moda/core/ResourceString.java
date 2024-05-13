@@ -10,15 +10,45 @@ public class ResourceString {
 
     public static final  String WELCOME_MESSAGE = "welcome to your Member Dashboard";
     public static final  String PCP_360_ELIGIBILITY = "PCP360";
-    public static final String[] BH_360_GROUPS = {"OEBB", "CPH", "SPH", "Leatherman", "Trailblazers"};
-    public static final String[] WITHOUT_BH_360_GROUPS = { "PEBB", "Salem Health", "OHSU"};
+    protected static final String[] BH_360_GROUPS = {
+            "OEBB",
+            "CPH",
+            "SPH",
+            "Leatherman",
+            "Trailblazer"
+    };
+    protected static final String[] WITHOUT_BH_360_GROUPS = {
+            "PEBB",
+            "Salem Health",
+            "OHSU"
+    };
+    protected static final String[] BH360ProgramList = {
+            "Charlie Health",
+            "Cyti Psychological",
+            "Equip", "NOCD",
+            "Behavioral Health Champions",
+            "Behavioral Health 360 Care Coordination",
+            "Child skill development with Gemiini",
+            "Addiction care with Hazelden Betty Ford",
+            "Mental health support with Spring Health",
+            "Mobile therapy with Meru Health"
+    };
 
     public static final  String ORAL_HEALTH_PDF_CONTENT = "Health through Oral Wellness";
 
     public static final String HAZELDEN_BETTY_FORD = "Hope. Health. Healing.";
 
     public static final String CARE_REMINDERS = "Care Reminders";
-    private static String firstCareReminder;
+    protected static String firstCareReminder;
+    protected static String snoozedCareReminder;
+
+    public static void setSnoozedCareReminder(String snoozed){
+        snoozedCareReminder = snoozed;
+    }
+
+    public static String getSnoozedCareReminder(){
+        return snoozedCareReminder;
+    }
 
     public static void setFirstCareReminder(String first){
         firstCareReminder = first;
@@ -26,5 +56,17 @@ public class ResourceString {
 
     public static String getFirstCareReminder(){
         return firstCareReminder;
+    }
+
+    public static String[] getBHGroups(){
+        return BH_360_GROUPS;
+    }
+
+    public static String[] getBH360ProgramList(){
+        return BH360ProgramList;
+    }
+
+    public static String[] getWithoutBh360Groups(){
+        return WITHOUT_BH_360_GROUPS;
     }
 }

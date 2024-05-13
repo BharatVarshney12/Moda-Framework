@@ -1,8 +1,5 @@
 package com.moda;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
@@ -16,10 +13,7 @@ import com.moda.pages.PCB360Page;
 import com.moda.utils.AllureReport;
 import com.moda.utils.Common;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.moda.utils.DataFromExcel;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -32,7 +26,7 @@ import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.restassured.response.Response;
 
-public class PCP_BH360_EligibilityTestCase extends Base {
+public class PCPBH360EligibilityTestCase extends Base {
     String userName;
     String password;
     String appURL;
@@ -43,7 +37,7 @@ public class PCP_BH360_EligibilityTestCase extends Base {
     @Story("PCP and BH360 Eligibility")
     @Severity(SeverityLevel.CRITICAL)
     @Description("PCP and BH360 Eligibility test")
-    public void userEligibilityTest(String group, String pcb360, String bh360, String userID) throws InterruptedException {
+    public void userEligibilityTest(String group, String pcb360, String bh360, String userID) {
         appURL = Constants.URL;
         userName = userID;
         password = Constants.PASSWORD;
@@ -62,9 +56,19 @@ public class PCP_BH360_EligibilityTestCase extends Base {
         AllureReport.step("API content type:" + response.getContentType() );
         Assert.assertEquals(response.getContentType(), "text/plain;charset=UTF-8", "Response type is not text/plain;charset=UTF-8");
 
+        Response getAccountResponse = loginPage.getAccountsWithAPI();
+
+        AllureReport.step("Get Accounts with API: firstName => " + getAccountResponse.jsonPath().getString("firstName"));
+        softAssert.assertTrue(getAccountResponse.getBody().print().contains("firstName"));
+
         loginPage.inputUserName(userName);
         loginPage.inputPassword(password);
         loginPage.submitLogin();
+
+        boolean isTermsAndPoliciesDisplayed = loginPage.waitForTermsAndPolicies();
+        if(isTermsAndPoliciesDisplayed){
+            loginPage.processTestForm(Constants.TEST_EMAIL);
+        }
 
         DashboardPage dashboardPage = new DashboardPage(getDriver());
         String welcomeMessage = dashboardPage.welcomeMessage();
@@ -72,6 +76,8 @@ public class PCP_BH360_EligibilityTestCase extends Base {
         Assert.assertTrue(welcomeMessage.contains(ResourceString.WELCOME_MESSAGE), ResourceString.WELCOME_MESSAGE + " does not exist in the" + welcomeMessage);
 
         Response pcpEligibilityResponse = dashboardPage.pcpEligibilityWithAPI();
+
+        AllureReport.step("PCP Eligibility API response: " + pcpEligibilityResponse.getBody().asString());
 
         AllureReport.step("PCP Eligibility API status code: "+ pcpEligibilityResponse.getStatusCode());
         Assert.assertEquals(pcpEligibilityResponse.getStatusCode(), 200, "Status code is not 200");
@@ -103,37 +109,22 @@ public class PCP_BH360_EligibilityTestCase extends Base {
             Assert.assertTrue(isBH360LateralDisplayed, "BH360 lateral is not displayed");
 
             AllureReport.step("Check BH360 Groups");
-            boolean isBH360Group = Common.arrayContainsElement(ResourceString.BH_360_GROUPS, group);
-            Assert.assertTrue(isBH360Group, Arrays.toString(ResourceString.BH_360_GROUPS) + " in BH360 group should exist: " + group);
+            boolean isBH360Group = Common.arrayContainsElement(ResourceString.getBHGroups(), group);
+            Assert.assertTrue(isBH360Group, Arrays.toString(ResourceString.getBHGroups()) + " in BH360 group should exist: " + group);
         } else {
             AllureReport.step("Check WithoutBH360 Groups");
-            boolean isWithoutBH360Group = Common.arrayContainsElement(ResourceString.WITHOUT_BH_360_GROUPS, group);
-            Assert.assertTrue(isWithoutBH360Group, Arrays.toString(ResourceString.WITHOUT_BH_360_GROUPS) + " in WithoutBH360 group should exist: " + group);
+            boolean isWithoutBH360Group = Common.arrayContainsElement(ResourceString.getWithoutBh360Groups(), group);
+            Assert.assertTrue(isWithoutBH360Group, Arrays.toString(ResourceString.getWithoutBh360Groups()) + " in WithoutBH360 group should exist: " + group);
         }
-
-        AllureReport.step("PCP Eligibility API response: " + pcpEligibilityResponse.getBody().asString());
 
     }
 
     @DataProvider(name = "dataProviderFromExcel")
-    public Object[][] getDataFromExcel() throws IOException {
+    public Object[][] getDataFromExcel() {
         String useCase4Excel = Paths.get(System.getProperty("user.dir"),"src", "test", "resources", "test-data","usecase4-data.xlsx").toString();
-        String sheetName = "usercase4";
+        String sheetName = "usecase4";
+        int columnCount = 4;
 
-        FileInputStream inputStream = new FileInputStream(new File(useCase4Excel));
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet sheet = workbook.getSheet(sheetName);
-
-        int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum();
-        Object[][] data = new Object[rowCount][4];
-
-        for (int i = 1; i <= rowCount; i++) {
-            Row row = sheet.getRow(i);
-            for (int j = 0; j < 4; j++) {
-                data[i - 1][j] = row.getCell(j).toString();
-            }
-        }
-        workbook.close();
-        return data;
+        return DataFromExcel.getDataFromExcel(useCase4Excel, sheetName, columnCount);
     }
 }

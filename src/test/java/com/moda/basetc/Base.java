@@ -3,6 +3,8 @@ package com.moda.basetc;
 import java.time.Duration;
 
 import com.moda.core.Constants;
+import com.moda.utils.ClearCache;
+import com.moda.utils.ExtraWaiting;
 import com.moda.utils.LogHelper;
 import org.openqa.selenium.WebDriver;
 
@@ -11,11 +13,13 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org.testng.asserts.SoftAssert;
 
 public class Base {
 
     protected static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     protected static ThreadLocal<WebDriverManager> wdm = new ThreadLocal<>();
+    public SoftAssert softAssert = new SoftAssert();
 
     @Parameters({"browser"})
     @BeforeTest
@@ -25,26 +29,29 @@ public class Base {
 
             switch (browser.toLowerCase()) {
                 case "chrome":
-                    setWDM(WebDriverManager.chromedriver().watch());
+                    setWDM(WebDriverManager.chromedriver().clearDriverCache().watch());
                     driverInstance = wdm.get().create();
+                    driver.set(driverInstance);
+                    driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
                     break;
                 case "edge":
                     setWDM(WebDriverManager.edgedriver().watch());
                     driverInstance = wdm.get().create();
+                    driver.set(driverInstance);
+                    driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
                     break;
                 case "firefox":
                     setWDM(WebDriverManager.firefoxdriver());
                     driverInstance = wdm.get().create();
+                    driver.set(driverInstance);
+                    driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
                     break;
                 default:
                     throw new IllegalArgumentException("Browser \"" + browser + "\" isn't supported.");
             }
 
-            driver.set(driverInstance);
-            driverInstance.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-
-             driverInstance.manage().window().maximize();
-             driverInstance.get(Constants.URL);
+            driverInstance.manage().window().maximize();
+            driverInstance.get(Constants.URL);
 
             LogHelper.getLogger().info("Navigated to the URL with browser: {}", browser);
         } catch (Exception e) {
@@ -54,8 +61,9 @@ public class Base {
 
     @AfterTest(alwaysRun = true)
     public void wrapUp() {
-        if ( driver != null ) {
-            driver.get().quit();
+        getWDM().quit(driver.get());
+        if ( getDriver() != null ) {
+            getDriver().quit();
         }
     }
 

@@ -2,14 +2,16 @@
 
 ## Run the test
 ```shell
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/valid-tests.xml
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/dev-tests.xml
-mvn test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/all-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/valid-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml
+mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/dev-tests.xml
 ```
 
 ## SonarQube command
 ```shell
 ./sonar.sh start
+mvn compile
 mvn sonar:sonar
 ```
 
@@ -27,15 +29,3 @@ Repository link: [https://github.com/eroshenkoam/allure-pdf/releases](https://gi
 ```shell
 allure-pdf allure-results -o report.pdf
 ```
-
-# Delete folder from command line
-```
-rmdir /s .git
-rmdir /s allure-results
-rmdir /s logs
-```
-
-## Resources:
-[Resources.md](/docs/Resources.md)
-
-
