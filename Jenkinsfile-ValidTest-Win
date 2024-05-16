@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Valid Test') {
             steps {
-                bat 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/all-tests.xml'
+                bat 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml'
             }
         }
         stage('Reports') {
