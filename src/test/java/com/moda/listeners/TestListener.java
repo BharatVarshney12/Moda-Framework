@@ -2,12 +2,10 @@ package com.moda.listeners;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.moda.basetc.Base;
-import com.moda.utils.AllureReport;
-import com.moda.utils.ExtraWaiting;
-import com.moda.utils.LogHelper;
-import com.moda.utils.ScreenShot;
+import com.moda.testcase.basetc.Base;
+import com.moda.utils.*;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -25,6 +23,7 @@ import java.time.Duration;
 public class TestListener implements ITestListener {
     ExtentReports extent;
     ExtentSparkReporter spark;
+    ExtentSparkReporter failedReport;
     ExtentTest test;
     String videoRecordingFileName = "";
     public WebDriver getDriver() {
@@ -34,7 +33,12 @@ public class TestListener implements ITestListener {
     public void onStart(ITestContext context) {
         extent = new ExtentReports();
         spark = new ExtentSparkReporter("target/extent-report/extent-report.html");
-        extent.attachReporter(spark);
+        failedReport = new ExtentSparkReporter("target/extent-report/extent-failed-report.html")
+                .filter()
+                .statusFilter()
+                .as(new Status[] { Status.FAIL })
+                .apply();
+        extent.attachReporter(spark, failedReport);
     }
 
     public void onTestStart(ITestResult result){

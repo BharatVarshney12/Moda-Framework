@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Valid Test') {
             steps {
-                bat 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml'
+                bat 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/valid-tests.xml'
             }
         }
         stage('Reports') {
@@ -25,7 +25,7 @@ pipeline {
                 }
                 stage('Extent Report') {
                     steps {
-                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, escapeUnderscores: false, keepAll: true, reportDir: 'target/extent-report', reportFiles: 'extent-report.html', reportName: 'Extent Report', reportTitles: ''])
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, escapeUnderscores: false, keepAll: true, reportDir: 'target/extent-report', reportFiles: 'extent-report.html', reportName: 'Extent-Report', reportTitles: ''])
                     }
                 }
                 stage('Allure Report') {
