@@ -9,12 +9,12 @@ pipeline {
     stages {
         stage('Maven Clean') {
             steps {
-                sh 'mvn clean'
+                bat 'mvn clean'
             }
         }
         stage('Valid Test') {
             steps {
-                sh 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml'
+                bat 'mvn clean test -Prun-tests -DsuiteXmlFile=src/test/resources/test-suite/pcp-bh360-eligibility-tests.xml'
             }
         }
         stage('Reports') {
